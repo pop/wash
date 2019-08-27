@@ -1,0 +1,181 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Wash Tutorial | home</title><style>body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}h1,h2,h3{line-height:1.2}div.header h1{padding-top:0;padding-bottom:8px;margin-bottom:24px;font-size:18px;font-weight:400;border-bottom:1px solid}.header-menu{float:right}ul.pagination{list-style-type:none;text-align:center;padding:0}ul.pagination>li{padding:0 8px;display:inline-block}div.footer{border-top:1px solid;text-align:center}img{max-width:100%;max-height:100%;display:block;margin-left:auto;margin-right:auto}</style><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;ga('create','UA-144580607-2','auto');ga('send','pageview');}</script><script async src=https://www.google-analytics.com/analytics.js></script><link rel=stylesheet href=/wash/dev/custom.css><link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,500" rel=stylesheet><link href="https://fonts.googleapis.com/css?family=Comfortaa|Monoton|Merriweather" rel=stylesheet></head><body><div class=header><h1><a href=/wash/dev>home</a><div class=header-menu><a href=/wash/dev/posts>news</a>
+<a href=/wash/dev/tutorial>tutorial</a>
+<a href=/wash/dev/docs>docs</a>
+<a href=https://github.com/puppetlabs/wash>github</a>
+<a href=https://github.com/puppetlabs/wash/releases>download</a>
+<a href="https://puppetcommunity.slack.com/app_redirect?channel=wash">slack</a></div></h1></div><div id=content><header><h1>Wash Tutorial</h1><div class=post-meta></div></header><article><p>This tutorial assumes you&rsquo;ve <a href=../#getting-started>installed Wash</a>.</p><h2 id=setting-up>Setting up</h2><p>To give you a sense of how <code>wash</code> works, we&rsquo;ve created a multi-node Docker application based on the <a href=https://docs.docker.com/compose/gettingstarted>Docker Compose tutorial</a>. To start it run</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>svn export https://github.com/puppetlabs/wash.git/trunk/examples/swarm
+docker-compose -f swarm/docker-compose.yml up -d</pre></td></tr></table></div></div><blockquote><p>If you don&rsquo;t have <code>svn</code> installed, you can <code>git clone https://github.com/puppetlabs/wash.git</code> and prefix <code>swarm/docker-compose.yml</code> with <code>wash/examples</code>.</p></blockquote><p>This starts a small <a href=http://flask.pocoo.org>Flask</a> webapp that keeps a count of how often it&rsquo;s been accessed in a <a href=http://redis.io>Redis</a> instance that maintains state in a Docker volume.</p><blockquote><p>When done, run <code>docker-compose -f swarm/docker-compose.yml down</code> to stop the example application.</p></blockquote><h2 id=getting-your-bearings>Getting your bearings</h2><p>Navigate the filesystem to view running containers</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>$ wash
+Welcome to Wash!
+  Wash includes several built-in commands: wexec, find, list, meta, tail.
+  See commands run with wash via &#39;whistory&#39;, and logs with &#39;whistory &lt;id&gt;&#39;.
+Try &#39;help&#39;
+wash . ❯ cd docker/containers
+wash docker/containers ❯ list
+NAME             MODIFIED              ACTIONS
+./               &lt;unknown&gt;             list
+swarm_redis_1/   03 Jul 19 07:57 PDT   list, exec
+swarm_web_1/     03 Jul 19 07:57 PDT   list, exec
+wash docker/containers ❯ list swarm_web_1
+NAME            MODIFIED              ACTIONS
+./              03 Jul 19 07:57 PDT   list, exec
+fs/             &lt;unknown&gt;             list
+log             &lt;unknown&gt;             read, stream
+metadata.json   &lt;unknown&gt;             read</pre></td></tr></table></div></div><p>Those containers are displayed as a directory, and provide access to their logs and metadata as files. Recent output from both can be accessed with common tools.</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>wash docker/containers ❯ tail */log
+==&gt; swarm_web_1/log &lt;==
+ * Serving Flask app &#34;app&#34; (lazy loading)
+ * Environment: production
+   WARNING: Do not use the development server in a production environment.
+   Use a production WSGI server instead.
+...
+
+==&gt; swarm_redis_1/log &lt;==
+1:C 21 Mar 2019 00:02:33.112 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+1:C 21 Mar 2019 00:02:33.112 # Redis version=5.0.4, bits=64, commit=00000000, modified=0, pid=1, just started
+1:C 21 Mar 2019 00:02:33.112 # Configuration loaded
+1:M 21 Mar 2019 00:02:33.113 * Running mode=standalone, port=6379.
+...</pre></td></tr></table></div></div><p>Notice that tab-completion makes it easy to find the containers you want to explore.</p><p>The list earlier also noted that the container &ldquo;directories&rdquo; support the <em>metadata</em> action. We can get structured metadata in ether YAML or JSON with <code>wash meta</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">6
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>wash docker/containers ❯ meta swarm_web_1 -o yaml
+AppArmorProfile: &#34;&#34;
+Args:
+- app.py
+Config:
+...</pre></td></tr></table></div></div><p>We can interrogate the container more closely with <code>wexec</code></p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>wash docker/containers ❯ wexec swarm_web_1 whoami
+root</pre></td></tr></table></div></div><p>Try exploring <code>docker/volumes</code> to interact with the volume created for Redis.</p><h2 id=finding-with-metadata>Finding with metadata</h2><p>Wash includes a powerful <code>find</code> command that can match based on an entry&rsquo;s metadata. For example, if we wanted to see what containers were created recently, we would look at the <code>.Created</code> entry for Docker containers and the <code>.metadata.creationTimestamp</code> for Kubernetes pods. We can find all instances created in the last 24 hours with</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>find -meta .Created -24h -o -meta .metadata.creationTimestamp -24h</pre></td></tr></table></div></div><p>That says: list entries with the <code>Created</code> metadata - interpreted as a date-time - that falls within the last 24 hours, or that have the <code>metadata: creationTimestamp</code> in the last 24 hours. See <code>help find</code> for more on using <code>find</code>.</p><p>If you want to try this out, or explore more Kubernetes functionality, you can create a Redis server with a persistent volume using Kubernetes in Docker and the following config:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">44
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">45
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>cat &lt;&lt;EOF | kubectl create -f -
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: redis
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: &#34;/mnt/data&#34;
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: redis
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: redis
+spec:
+  containers:
+  - name: redis
+    image: redis
+    args: [&#34;--appendonly&#34;, &#34;yes&#34;]
+    volumeMounts:
+    - name: redis
+      mountPath: /data
+  volumes:
+  - name: redis
+    persistentVolumeClaim:
+      claimName: redis
+EOF</pre></td></tr></table></div></div><p><strong>NOTE:</strong> <code>find \( -k 'docker/*container' -o -k 'kubernetes/*pod' \) -crtime -1d</code> is an easier (and more expressive) way to solve this problem. This example&rsquo;s only here to introduce the meta primary.</p><h2 id=listing-aws-resources>Listing AWS resources</h2><p>Wash also includes support for AWS. If you have your own and you&rsquo;ve configured the AWS CLI on your workstation, you&rsquo;ll be able to use Wash to explore EC2 instances and S3 buckets.</p><p>As an example, you might want to periodically check how many execable instances are running in the AWS plugin (and display that via <a href=https://getbitbar.com/>BitBar</a>):</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>running=`find aws -action exec -meta .State.Name running 2&gt;/dev/null | wc -l | xargs`
+total=`find aws -action exec -meta .State.Name -exists 2&gt;/dev/null | wc -l | xargs`
+echo EC2 $running / $total</pre></td></tr></table></div></div><p>Or count the number of S3 buckets that have been created:</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
+</span><span style="margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
+</span></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0><pre style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4>buckets=`find aws -k &#39;*s3*bucket&#39; 2&gt;/dev/null | wc -l | xargs`
+echo S3 $buckets</pre></td></tr></table></div></div><h2 id=record-of-activity>Record of activity</h2><p>All operations have their activity recorded to journals. You can see a record of activity with <code>whistory</code>, and look at logs of individual entries with <code>whistory &lt;id&gt;</code>.</p></article></div><div class=footer><div class=copyright>© 2019 — the wash maintainers</div></div></body></html>
